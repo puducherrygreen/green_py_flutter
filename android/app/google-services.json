@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "896098828351",
+    "project_id": "green-puducherry",
+    "storage_bucket": "green-puducherry.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:896098828351:android:63952fdfbfbe28638d788a",
+        "android_client_info": {
+          "package_name": "com.envipdy.green_puducherry"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "896098828351-ns19j84hn1eiqjsr05lm665ftlhcmnac.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.envipdy.green_puducherry",
+            "certificate_hash": "67f7681f5e36ddeb3ff07e5efb178821bee84b21"
+          }
+        },
+        {
+          "client_id": "896098828351-ond2297nqrk7c9nedlcu9bp8lfmsp480.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.envipdy.green_puducherry",
+            "certificate_hash": "615cc20a9baa87565c067c967aeaa79f16faea2a"
+          }
+        },
+        {
+          "client_id": "896098828351-duq8nsddl3v704puralm2sg6kkco8khq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApZMZ065lH34VYH45n-vGMu1KNXFAs0Sk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "896098828351-duq8nsddl3v704puralm2sg6kkco8khq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
