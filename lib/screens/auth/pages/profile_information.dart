@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:green_puducherry/common_widgets/common_widgets.dart';
@@ -189,6 +190,8 @@ class _ProfileInformationState extends State<ProfileInformation> {
 
                   print('auth register: $user and validation $validation');
                   if (user != null && validation) {
+                    final fcmToken =
+                        await FirebaseMessaging.instance.getToken();
                     Map<String, dynamic> profileData = {
                       "email": authProvider.user?.email,
                       "userName": fullName.text.trim(),
@@ -197,6 +200,7 @@ class _ProfileInformationState extends State<ProfileInformation> {
                       "pincode": pinCode.text,
                       "regionId": authProvider.regionModel?.id,
                       "communeId": authProvider.communeModel?.id,
+                      "deviceToken": fcmToken,
                     };
 
                     clearFields();

@@ -4,6 +4,11 @@ class ValidationHelper {
     return re.hasMatch(value);
   }
 
+  static bool queryValidation({required String value, String? regX}) {
+    final re = RegExp(regX ?? r"(\S+\s+){2}\S+");
+    return re.hasMatch(value);
+  }
+
   static bool mobileNumberValidation({required String value, String? regX}) {
     final re = RegExp(regX ?? r"^(?:\+91)?[6789]\d{9}$");
     return re.hasMatch(value);

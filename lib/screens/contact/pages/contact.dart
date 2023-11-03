@@ -2,6 +2,7 @@ import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:green_puducherry/common_widgets/common_widgets.dart';
+import 'package:green_puducherry/helpers/validation_helper.dart';
 import 'package:green_puducherry/providers/auth_provider.dart';
 import 'package:green_puducherry/services/other_services.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,16 @@ class _ContactState extends State<Contact> {
 
   final TextEditingController queryController = TextEditingController();
   bool loading = false;
+
+  bool queryValidate = true;
+
+  queryValidater() {
+    queryValidate =
+        ValidationHelper.queryValidation(value: queryController.text.trim());
+    setState(() {});
+    return queryValidate;
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -55,6 +66,7 @@ class _ContactState extends State<Contact> {
                           const GText("Ask Your Query"),
                           SizedBox(height: 10.h),
                           MyTextField(
+                            isValid: queryValidate,
                             controller: queryController,
                             hintText: "Query",
                             minLine: 4,
@@ -148,31 +160,34 @@ class _ContactState extends State<Contact> {
                       GreenButton(
                         text: "Send Query",
                         onPressed: () async {
-                          loading = true;
-                          setState(() {});
-                          print("Send Query Function Called");
-                          print(queryController.text);
                           FocusScope.of(context).unfocus();
 
-                          try {
-                            await OtherServices.sendQuery(
-                                query: queryController.text,
-                                userId: authProvider.userModel!.id);
-                            queryController.clear();
-                            if (context.mounted) {
-                              VxToast.show(context,
-                                  msg: "Your query has been sent");
-                            }
+                          if (queryValidater()) {
+                            loading = true;
+                            setState(() {});
+                            try {
+                              await OtherServices.sendQuery(
+                                  query: queryController.text,
+                                  userId: authProvider.userModel!.id);
+                              queryController.clear();
+                              if (context.mounted) {
+                                VxToast.show(context,
+                                    msg: "Your query has been sent");
+                              }
 
-                            print('completed query .....................');
-                          } catch (e) {
-                            if (context.mounted) {
-                              VxToast.show(context,
-                                  msg: "Something went wrong");
+                              print('completed query .....................');
+                            } catch (e) {
+                              if (context.mounted) {
+                                VxToast.show(context,
+                                    msg: "Something went wrong");
+                              }
                             }
+                            loading = false;
+                            setState(() {});
+                          } else {
+                            VxToast.show(context,
+                                msg: "minimum 3 words required");
                           }
-                          loading = false;
-                          setState(() {});
                         },
                       ),
                     ],

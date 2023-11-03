@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:green_puducherry/common_widgets/green_drawer.dart';
 import 'package:green_puducherry/helpers/green_drawer_key.dart';
 import 'package:green_puducherry/screens/bottom_nav.dart';
+import 'package:velocity_x/velocity_x.dart';
 import '../constant/constant.dart';
 
 class BackgroundScaffold extends StatelessWidget {

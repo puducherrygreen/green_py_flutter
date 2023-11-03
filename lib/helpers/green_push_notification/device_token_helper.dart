@@ -1,4 +1,5 @@
 import 'package:green_puducherry/constant/constant.dart';
+import 'package:green_puducherry/services/auth_service.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../local_storage.dart';
@@ -10,7 +11,7 @@ class DeviceToken {
     if (userId != null && fCMToken != deviceToken) {
       bool connected = await InternetConnectionChecker().hasConnection;
       if (connected) {
-        /// tokent update logig
+        await AuthService().updateDeviceToken(token: fCMToken, userId: userId);
 
         print('------------- token : $fCMToken');
         LocalStorage.setString(GreenText.kDeviceToken, fCMToken);

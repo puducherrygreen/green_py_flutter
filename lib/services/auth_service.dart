@@ -199,4 +199,12 @@ class AuthService {
       print(e);
     }
   }
+
+  updateDeviceToken({required String? token, required String userId}) async {
+    final client = http.Client();
+    if (token != null) {
+      await client.post(GreenApi.kUpdateDeviceToken,
+          body: {"deviceToken": token, "userId": userId});
+    }
+  }
 }

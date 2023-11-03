@@ -13,6 +13,7 @@ class UserModel {
   final String address;
   final String pincode;
   final String date;
+  final String? deviceToken;
   final RegionModel region;
   final CommuneModel commune;
   PlantModel? plantModel;
@@ -29,6 +30,7 @@ class UserModel {
     required this.date,
     required this.region,
     required this.commune,
+    required this.deviceToken,
     this.plantModel,
   });
 
@@ -43,6 +45,7 @@ class UserModel {
       address: json['address'],
       pincode: json['pincode'],
       date: json['date'],
+      deviceToken: json['deviceToken'],
       region: RegionModel.fromJson(json['region']),
       commune: CommuneModel.fromJson(json['commune']),
       plantModel: json["plantDetailsData"] != null
@@ -62,6 +65,7 @@ class UserModel {
     mapData['address'] = address;
     mapData['pincode'] = pincode;
     mapData['date'] = date;
+    mapData['deviceToken'] = deviceToken;
     mapData['region'] = region.convertIntoMap();
     mapData['commune'] = commune.convertIntoMap();
 

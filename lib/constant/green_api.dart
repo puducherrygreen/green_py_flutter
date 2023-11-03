@@ -11,6 +11,8 @@ class GreenApi {
       "app/v1/user/update/read/notification/";
 
   static Uri kBaseUri = Uri.https(kBaseUrl, '');
+  static Uri kUpdateDeviceToken =
+      Uri.https(kBaseUrl, 'app/v1/user/update/device/token');
   static Uri kSendQuery = Uri.https(kBaseUrl, 'app/v1/user/add/query');
   static Uri kGetSelectedPlantUrl =
       Uri.https(kBaseUrl, "app/v1/admin/get/admin/gallery/selected");
