@@ -69,6 +69,7 @@ class _ContactState extends State<Contact> {
                             isValid: queryValidate,
                             controller: queryController,
                             hintText: "Query",
+                            errorText: "Minimum 3 words required",
                             minLine: 4,
                             maxLine: 4,
                             keyboardType: TextInputType.multiline,

@@ -15,8 +15,7 @@ class ViewNotificationMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BackgroundScaffold(
-      appBar:
-          greenAppBar(title: "View Notification", leading: GreenBackButton()),
+      appBar: greenAppBar(title: "", leading: GreenBackButton()),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(

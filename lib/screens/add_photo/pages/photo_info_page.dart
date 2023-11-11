@@ -73,7 +73,7 @@ class _PhotoInfoPageState extends State<PhotoInfoPage> {
                 ImageInfoTail(
                     fieldName: "Plant Name",
                     value:
-                        "${plantProvider.plantModel?.plantName ?? plantProvider.selectedPlantModel?.plantName}"),
+                        "${plantProvider.currentPlantModel?.plantName ?? plantProvider.selectedPlantModel?.plantName}"),
                 if (plantProvider.location != null)
                   Row(
                     children: [
@@ -109,7 +109,7 @@ class _PhotoInfoPageState extends State<PhotoInfoPage> {
                     Map<String, dynamic> plantInfo = {
                       "imageUrl": widget.imagePath,
                       "availablePlantId":
-                          plantProvider.plantModel?.availablePlantId ??
+                          plantProvider.currentPlantModel?.availablePlantId ??
                               plantProvider.selectedPlantModel?.id,
                       "userId": authProvider.userModel?.id,
                       "communeId": authProvider.userModel?.communeId,
@@ -117,8 +117,8 @@ class _PhotoInfoPageState extends State<PhotoInfoPage> {
                       "latitude": "${plantProvider.location?.latitude}",
                       "longitude": "${plantProvider.location?.longitude}",
                       "status": plantProvider.isAlive ? "Alive" : "Dead",
-                      if (plantProvider.plantModel != null)
-                        "plantDetailsID": plantProvider.plantModel?.id,
+                      // if (plantProvider.plantModel != null)
+                      //   "plantDetailsID": plantProvider.plantModel?.id,
                     };
                     print(plantInfo);
                     try {

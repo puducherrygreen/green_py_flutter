@@ -23,25 +23,26 @@ class NotificationMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final np = Provider.of<NotificationProvider>(context);
-    return Material(
-      child: InkWell(
-        onTap: () {
-          if (!isReaded) {
-            np.makeHasReade(notificationId: id);
-          }
-          MyNavigation.to(
-              context, ViewNotificationMessage(message: message, title: title));
-        },
-        child: Opacity(
-          opacity: isReaded ? 0.5 : 1,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 3.h),
+      child: Material(
+        borderRadius: BorderRadius.circular(6.r),
+        color: Colors.white,
+        child: InkWell(
+          onTap: () {
+            if (!isReaded) {
+              np.makeHasReade(notificationId: id);
+            }
+            MyNavigation.to(context,
+                ViewNotificationMessage(message: message, title: title));
+          },
+          child: Opacity(
+            opacity: isReaded ? 0.5 : 1,
             child: Container(
               width: 1.sw,
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              margin: EdgeInsets.symmetric(vertical: 5),
+              // margin: EdgeInsets.symmetric(vertical: 5),
               decoration: BoxDecoration(
-                color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(

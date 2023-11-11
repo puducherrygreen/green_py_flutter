@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:green_puducherry/constant/constant.dart';
-import 'package:green_puducherry/helpers/my_navigation.dart';
-import 'package:green_puducherry/providers/bottom_nav_provider.dart';
-import 'package:green_puducherry/screens/notification/pages/notification_page.dart';
-import 'package:green_puducherry/screens/profile/pages/profile_page.dart';
+import 'package:green_puducherry/providers/notification_provider.dart';
+import 'package:green_puducherry/screens/notification/pages/query_list_page.dart';
+
 import 'package:provider/provider.dart';
 
+import '../constant/green_images.dart';
+import '../helpers/my_navigation.dart';
 import '../providers/auth_provider.dart';
+import '../providers/bottom_nav_provider.dart';
 import '../screens/add_photo/pages/photo_added_messege.dart';
 import '../screens/auth/pages/lets_start.dart';
 import '../screens/gallery/pages/selected_image_gallery.dart';
+import '../screens/notification/pages/notification_page.dart';
+import '../screens/profile/pages/profile_page.dart';
 import 'g_text.dart';
 
 class GreenDrawer extends StatelessWidget {
@@ -20,6 +23,8 @@ class GreenDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final bottomNavProvider = Provider.of<BottomNavProvider>(context);
+    final notificationProvider = Provider.of<NotificationProvider>(context);
+
     return Drawer(
       width: 0.7.sw,
       backgroundColor: Color(0xffD2FBCD),
@@ -39,6 +44,11 @@ class GreenDrawer extends StatelessWidget {
             label: "Notification",
             page: NotificationPage(),
           ),
+          if (notificationProvider.allQueries != null)
+            const DrawerListTail(
+              label: "Query",
+              page: QueryListPage(),
+            ),
           DrawerListTail(
             label: "Image Gallery",
             page: SelectedImageGallery(),

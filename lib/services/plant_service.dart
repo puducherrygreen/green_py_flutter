@@ -17,7 +17,7 @@ class PlantService {
     return data;
   }
 
-  Future<PlantModel?> getUserPlants({required String userId}) async {
+  Future<List<PlantModel>?> getUserPlants({required String userId}) async {
     final client = http.Client();
     final res = await client.get(Uri.https(
         GreenApi.kBaseUrl, "${GreenApi.kGetUserPlantByIdUrl}$userId"));
@@ -26,8 +26,13 @@ class PlantService {
     print(data);
     print('-------------plant details data ------------');
     if (data['plantDetailsData'] != null) {
-      Map<String, dynamic> mapData = data['plantDetailsData'];
-      return PlantModel.fromJson(mapData);
+      List listData = data['plantDetailsData'];
+      List<PlantModel> allPlantModel = [];
+      for (Map i in listData) {
+        allPlantModel.add(PlantModel.fromJson(i));
+      }
+
+      return allPlantModel;
     }
     print('-------------plant details data end ------------');
     return null;
@@ -36,10 +41,12 @@ class PlantService {
   addPlant({required Map<String, dynamic> plantData}) async {
     final client = http.Client();
     final res = await client.post(GreenApi.kAddPlantImage, body: plantData);
+    String? userid = await LocalStorage.getString(GreenText.kUserId);
     print(res.body);
     Map? plantInfo = jsonDecode(res.body);
-    if (plantInfo != null) {
-      LocalStorage.setMap(GreenText.kPlantInfo, plantInfo);
+    print("userid------------------$userid");
+    if (plantInfo != null && userid != null) {
+      getUserPlants(userId: userid);
     }
     return plantInfo;
   }

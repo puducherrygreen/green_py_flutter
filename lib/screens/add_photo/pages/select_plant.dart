@@ -37,21 +37,21 @@ class _SelectPlantState extends State<SelectPlant> {
             SizedBox(
               height: 0.8.sw,
               width: 0.8.sw,
-              child: plantProvider.plantModel != null
+              child: plantProvider.currentPlantModel != null
                   ? Image.asset(GreenImages.kTrees)
                   : Image.asset(GreenImages.kPlanting),
             ),
             // SizedBox(height: 30.h),
 
             GText(
-              plantProvider.plantModel != null
+              plantProvider.currentPlantModel != null
                   ? "Your plant"
                   : "Register Your Plant",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 15.h),
 
-            plantProvider.plantModel == null
+            plantProvider.currentPlantModel == null
                 ? MyDropDown(
                     border: isValid ? null : Colors.red,
                     hintText: "Select Your Plant",
@@ -72,7 +72,8 @@ class _SelectPlantState extends State<SelectPlant> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            GText("${plantProvider.plantModel?.plantName}"),
+                            GText(
+                                "${plantProvider.currentPlantModel?.plantName}"),
                           ],
                         ),
                       ),
@@ -80,8 +81,9 @@ class _SelectPlantState extends State<SelectPlant> {
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
-                            children:
-                                plantProvider.plantModel!.plantImages.map((e) {
+                            children: plantProvider
+                                .currentPlantModel!.plantImages
+                                .map((e) {
                           print(e);
                           return ImageForView(imageModel: e);
                         }).toList()),
@@ -90,23 +92,23 @@ class _SelectPlantState extends State<SelectPlant> {
                   ),
             const Spacer(),
             GreenButton(
-              enabled: plantProvider.plantModel?.nextPhotoEnabled ?? true,
+              enabled:
+                  plantProvider.currentPlantModel?.nextPhotoEnabled ?? true,
               // enabled: true,
 
-              ///comment it while production
               onPressed: () async {
                 final locationStatus = await Permission.location.status;
                 final cameraStatus = await Permission.camera.status;
                 print(cameraStatus);
                 if (locationStatus.isGranted && cameraStatus.isGranted) {
                   if (plantProvider.selectedPlantModel == null &&
-                      plantProvider.plantModel == null) {
+                      plantProvider.currentPlantModel == null) {
                     setState(() {
                       isValid = false;
                     });
-                    return;
+                    // return;
                   }
-                  if (plantProvider.plantModel != null) {
+                  if (plantProvider.currentPlantModel != null) {
                     if (context.mounted) {
                       await plantProvider.myDialogShowStatusDialog(context,
                           plantProvider: plantProvider);
@@ -122,8 +124,9 @@ class _SelectPlantState extends State<SelectPlant> {
                   }
                 }
               },
-              text:
-                  plantProvider.plantModel != null ? "Add Photo" : "Take Photo",
+              text: plantProvider.currentPlantModel != null
+                  ? "Add Photo"
+                  : "Take Photo",
             ),
             SizedBox(height: 15.h),
           ],

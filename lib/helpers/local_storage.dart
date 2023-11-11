@@ -23,6 +23,11 @@ class LocalStorage {
     await storage.setString(key, json.encode(value));
   }
 
+  static setList(String key, List value) async {
+    SharedPreferences storage = await SharedPreferences.getInstance();
+    await storage.setString(key, json.encode(value));
+  }
+
   static Future<String?> getString(String key) async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     return storage.getString(key);
@@ -50,6 +55,19 @@ class LocalStorage {
       return null;
     }
     Map data = jsonDecode(localData.toString());
+    return data;
+  }
+
+  static Future<List?> getList(String key) async {
+    SharedPreferences storage = await SharedPreferences.getInstance();
+    final localData = storage.getString(key);
+    print('local list data --------------------------');
+    print(localData);
+    if (localData == null) {
+      return null;
+    }
+    List data = jsonDecode(localData.toString());
+    print('local list data --------------------------');
     return data;
   }
 

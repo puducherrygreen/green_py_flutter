@@ -21,7 +21,8 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userModel = Provider.of<AuthProvider>(context).userModel;
-    PlantModel? plantModel = Provider.of<PlantProvider>(context).plantModel;
+    PlantModel? currentPlantModel =
+        Provider.of<PlantProvider>(context).currentPlantModel;
     return BackgroundScaffold(
         appBar: greenAppBar(
             title: "Profile Information", leading: GreenBackButton()),
@@ -44,22 +45,25 @@ class ProfilePage extends StatelessWidget {
                         value: userModel.commune.communeName),
 
                     /// tree model
-                    if (plantModel != null)
+                    if (currentPlantModel != null)
                       Column(
                         children: [
                           Divider(thickness: 2),
                           ProfileInfoTail(
-                              field: "Tree Name", value: plantModel.plantName),
+                              field: "Tree Name",
+                              value: currentPlantModel.plantName),
                           ProfileInfoTail(
-                              field: "Latitude", value: plantModel.latitude),
+                              field: "Latitude",
+                              value: currentPlantModel.latitude),
                           ProfileInfoTail(
-                              field: "Longitude", value: plantModel.longitude),
+                              field: "Longitude",
+                              value: currentPlantModel.longitude),
                           ProfileInfoTail(
-                              field: "Status", value: plantModel.status),
+                              field: "Status", value: currentPlantModel.status),
                           ProfileInfoTail(
                               field: "Planted date",
                               value: DateFormatterHelper.formattedDate(
-                                  stringDate: plantModel.date)),
+                                  stringDate: currentPlantModel.date)),
                           Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 10.w, vertical: 3.h),
@@ -73,7 +77,7 @@ class ProfilePage extends StatelessWidget {
                               child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
-                                  children: plantModel.plantImages
+                                  children: currentPlantModel.plantImages
                                       .map((PlantImageModel e) {
                                     return ImageForView(imageModel: e);
                                   }).toList(),

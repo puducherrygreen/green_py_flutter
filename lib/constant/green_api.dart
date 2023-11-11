@@ -3,8 +3,8 @@ class GreenApi {
 
   static String kGetCommuneWithRegionIdUrl =
       "app/v1/user/get/commune/byRegionId/";
-  static String kGetUserPlantByIdUrl =
-      "app/v1/admin/get/user/query/response/ById/";
+  static String kGetQueryUrl = "app/v1/admin/get/user/query/byuserId/";
+  static String kGetUserPlantByIdUrl = "app/v1/admin/get/user/plants/byUserId/";
   static String kGetUserNotificationUrl =
       "app/v1/admin/get/notification/ByuserId/";
   static String kMakeNotificationReadUrl =

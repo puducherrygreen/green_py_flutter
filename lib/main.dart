@@ -14,6 +14,7 @@ import 'providers/loading_provider.dart';
 import 'providers/notification_provider.dart';
 import 'providers/plant_provider.dart';
 import 'screens/add_photo/pages/photo_added_messege.dart';
+import 'screens/auth/pages/auth_with_email.dart';
 import 'screens/auth/pages/lets_start.dart';
 
 late List<CameraDescription> kGlobalCamera;

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:green_puducherry/models/notification_model.dart';
+import 'package:green_puducherry/models/query_model.dart';
 import 'package:http/http.dart' as http;
 
 import '../constant/green_api.dart';
@@ -40,5 +41,26 @@ class NotificationService {
     } catch (e) {
       return null;
     }
+  }
+
+  Future<List<QueryModel>?> getUserQuery({required String userId}) async {
+    final client = http.Client();
+    final res = await client
+        .get(Uri.https(GreenApi.kBaseUrl, "${GreenApi.kGetQueryUrl}$userId"));
+    print("query api res ${res.body}");
+    List? data = jsonDecode(res.body);
+    print('-------------query details data ------------');
+    print(data);
+    print('-------------query details data ------------');
+    if (data != null) {
+      List<QueryModel> queryModel = [];
+      for (Map i in data) {
+        queryModel.add(QueryModel.fromJson(i));
+      }
+
+      return queryModel;
+    }
+    print('-------------query details data end ------------');
+    return null;
   }
 }

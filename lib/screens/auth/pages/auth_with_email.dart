@@ -117,6 +117,7 @@ class _AuthWithEmailState extends State<AuthWithEmail> {
                 controller: emailController,
                 isPassword: false,
                 hintText: "Email",
+                errorText: "Invalid Email",
                 keyboardType: TextInputType.emailAddress,
                 onChange: (val) {
                   emailValidate = true;
@@ -129,6 +130,7 @@ class _AuthWithEmailState extends State<AuthWithEmail> {
                 controller: passwordController,
                 isPassword: true,
                 hintText: 'Password',
+                errorText: 'Invalid Password',
                 onChange: (val) {
                   passwordValidate = true;
                   setState(() {});

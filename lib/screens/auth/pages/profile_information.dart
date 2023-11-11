@@ -103,6 +103,7 @@ class _ProfileInformationState extends State<ProfileInformation> {
                 controller: fullName,
                 isPassword: false,
                 hintText: "Full Name",
+                errorText: "Invalid Full Name",
                 onChange: (val) {
                   nameValidate = true;
                   setState(() {});
@@ -114,9 +115,11 @@ class _ProfileInformationState extends State<ProfileInformation> {
                 controller: mobileNumber,
                 isPassword: false,
                 hintText: "Mobile Number",
+                errorText: "Invalid Mobile Number",
                 keyboardType: TextInputType.phone,
                 onChange: (val) {
                   numberValidate = true;
+                  setState(() {});
                 },
               ),
               SizedBox(height: 10.h),
@@ -125,6 +128,7 @@ class _ProfileInformationState extends State<ProfileInformation> {
                 controller: address,
                 isPassword: false,
                 hintText: "Address",
+                errorText: "Invalid Address",
                 keyboardType: TextInputType.multiline,
                 onChange: (val) {
                   addressValidate = true;
@@ -137,6 +141,7 @@ class _ProfileInformationState extends State<ProfileInformation> {
                 controller: pinCode,
                 isPassword: false,
                 hintText: "Pin Code",
+                errorText: "Invalid Pin Code",
                 keyboardType: TextInputType.number,
                 onChange: (val) {
                   pinCodeValidate = true;
@@ -147,6 +152,7 @@ class _ProfileInformationState extends State<ProfileInformation> {
               MyDropDown(
                 border: regionValidate ? null : Colors.red,
                 hintText: "Region",
+                errorText: "Invalid Region",
                 onChange: (value) async {
                   print("Region : $value");
                   region.text = value;
@@ -164,6 +170,7 @@ class _ProfileInformationState extends State<ProfileInformation> {
                   ? MyDropDown(
                       border: communeValidate ? null : Colors.red,
                       hintText: "Commune/Municipality",
+                      errorText: "Invalid Commune/Municipality",
                       value: commune.text.isEmpty ? null : commune.text,
                       onChange: (value) async {
                         print("Commune/Municipality : $value");

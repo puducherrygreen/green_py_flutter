@@ -66,22 +66,13 @@ class Home extends StatelessWidget {
                 SizedBox(height: 10.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.h),
-                  child: Container(
-                    child: Text(
-                      GreenText.kHomeContent,
-                      style:
-                          TextStyle(fontSize: 14.sp, color: Colors.grey[800]),
-                      textAlign: TextAlign.justify,
-                    ),
+                  child: Text(
+                    GreenText.kHomeContent,
+                    style: TextStyle(fontSize: 14.sp, color: Colors.grey[800]),
+                    textAlign: TextAlign.justify,
                   ),
                 ),
                 SizedBox(height: 10.h),
-                TextButton(
-                    onPressed: () async {
-                      NotificationManager().simpleNotificationShow(
-                          id: 0, title: "Test Title", message: "Test message");
-                    },
-                    child: Text("Show Overlay"))
               ],
             ),
           ),

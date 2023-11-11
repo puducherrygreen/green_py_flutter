@@ -43,9 +43,9 @@ class Gallery extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (plantProvider.plantModel == null)
+                if (plantProvider.currentPlantModel == null)
                   const GText("You Have No Plant"),
-                if (plantProvider.plantModel != null)
+                if (plantProvider.currentPlantModel != null)
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,23 +53,26 @@ class Gallery extends StatelessWidget {
                       SizedBox(height: 20.h),
                       ProfileInfoTail(
                           field: "Plant Name",
-                          value: "${plantProvider.plantModel?.plantName}"),
+                          value:
+                              "${plantProvider.currentPlantModel?.plantName}"),
                       ProfileInfoTail(
                           field: "Latitude",
-                          value: "${plantProvider.plantModel?.latitude}"),
+                          value:
+                              "${plantProvider.currentPlantModel?.latitude}"),
                       ProfileInfoTail(
                           field: "Longitude",
-                          value: "${plantProvider.plantModel?.longitude}"),
+                          value:
+                              "${plantProvider.currentPlantModel?.longitude}"),
                       Divider(thickness: 2.sp),
                     ],
                   ),
-                if (plantProvider.plantModel != null)
+                if (plantProvider.currentPlantModel != null)
                   Column(
                       children: List.generate(
-                          plantProvider.plantModel!.plantImages.length,
+                          plantProvider.currentPlantModel!.plantImages.length,
                           (index) {
                     PlantImageModel e =
-                        plantProvider.plantModel!.plantImages[index];
+                        plantProvider.currentPlantModel!.plantImages[index];
 
                     print('photo widgets ----------------');
                     print(e.convertIntoMap());

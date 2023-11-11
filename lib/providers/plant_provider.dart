@@ -27,7 +27,8 @@ class PlantProvider extends ChangeNotifier {
 
   List<AvailablePlantModel> availablePlants = [];
   AvailablePlantModel? selectedPlantModel;
-  PlantModel? plantModel;
+  List<PlantModel> plantModel = [];
+  PlantModel? currentPlantModel;
   bool isAlive = true;
   Position? location;
   List<PlantImageModel> allSelectedPlant = [];
@@ -42,6 +43,15 @@ class PlantProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  setCurrentPlant(PlantModel plantModel) {
+    currentPlantModel = plantModel;
+    notifyListeners();
+  }
+
+  removeCurrentPlant() {
+    currentPlantModel = null;
+  }
+
   getAvailablePlants() async {
     List<dynamic> listOfPlants = await _plantService.getAvailablePlants();
     availablePlants =
@@ -50,20 +60,30 @@ class PlantProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<PlantModel?> getUserPlants({required String userId}) async {
-    PlantModel? resPlant = await _plantService.getUserPlants(userId: userId);
-    plantModel = resPlant;
+  Future<List<PlantModel>?> getUserPlants({required String userId}) async {
+    List<PlantModel>? resPlant =
+        await _plantService.getUserPlants(userId: userId);
+    plantModel = resPlant ?? [];
     print('model trest -----------');
     print('userId-- : $userId');
-    print(resPlant?.convertIntoMap());
     print(plantModel);
     print('model trest -----------');
-    if (plantModel != null) {
-      LocalStorage.setMap(GreenText.kPlantInfo, plantModel?.convertIntoMap());
+    if (plantModel.isNotEmpty) {
+      // LocalStorage.setMap(GreenText.kPlantInfo, plantModel?.convertIntoMap());
+      LocalStorage.setList(GreenText.kPlantInfo, convertAllPlantToMap());
     }
+    loadLocalPlant();
 
     notifyListeners();
     return resPlant;
+  }
+
+  List<Map<String, dynamic>> convertAllPlantToMap() {
+    List<Map<String, dynamic>> mapList = [];
+    for (PlantModel i in plantModel) {
+      mapList.add(i.convertIntoMap());
+    }
+    return mapList;
   }
 
   getSelectedPlantWithId({required String plantName}) {
@@ -80,6 +100,11 @@ class PlantProvider extends ChangeNotifier {
     final data = await _plantService.addPlant(plantData: plantData);
     print('add-plant data res -------------------');
     print(data);
+    String? userId = await LocalStorage.getString(GreenText.kUserId);
+    if (userId != null) {
+      getUserPlants(userId: userId);
+    }
+
     await loadLocalPlant();
     print('add-plant data res -------------------');
   }
@@ -116,11 +141,15 @@ class PlantProvider extends ChangeNotifier {
   }
 
   loadLocalPlant() async {
-    Map? plantInfo = await LocalStorage.getMap(GreenText.kPlantInfo);
+    List? plantInfo = await LocalStorage.getList(GreenText.kPlantInfo);
     print("plant Info -----------------");
     print(plantInfo);
     if (plantInfo != null) {
-      plantModel = PlantModel.fromJson(plantInfo);
+      List<PlantModel> allPlantModel = [];
+      for (Map i in plantInfo) {
+        allPlantModel.add(PlantModel.fromJson(i));
+      }
+      plantModel = allPlantModel;
       notifyListeners();
     } else {
       String? userId = await LocalStorage.getString(GreenText.kUserId);

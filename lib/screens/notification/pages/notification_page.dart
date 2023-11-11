@@ -29,7 +29,7 @@ class NotificationPage extends StatelessWidget {
                 child: GText("No Notification"),
               )
             : ListView(
-                padding: const EdgeInsets.only(bottom: 20),
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
                 children: np.allNotification!
                     .map(
                       (e) => NotificationMessage(
