@@ -4,6 +4,7 @@ import 'package:green_puducherry/helpers/my_navigation.dart';
 import 'package:green_puducherry/providers/notification_provider.dart';
 import 'package:green_puducherry/screens/notification/pages/notification_page.dart';
 import 'package:provider/provider.dart';
+
 import '../constant/green_colors.dart';
 
 class NotificationButton extends StatelessWidget {
@@ -24,7 +25,7 @@ class NotificationButton extends StatelessWidget {
           radius: 20,
           child: Badge(
             backgroundColor: np.hasNew ? Colors.red : Colors.transparent,
-            child: Icon(
+            child: const Icon(
               FeatherIcons.bell,
               size: 20,
               color: GreenColors.kMainColor,

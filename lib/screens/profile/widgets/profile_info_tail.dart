@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:green_puducherry/common_widgets/g_text.dart';
-import 'package:green_puducherry/common_widgets/green_box.dart';
 
 class ProfileInfoTail extends StatelessWidget {
   const ProfileInfoTail({

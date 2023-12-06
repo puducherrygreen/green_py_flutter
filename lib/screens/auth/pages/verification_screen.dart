@@ -1,15 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:green_puducherry/common_widgets/common_widgets.dart';
 import 'package:green_puducherry/constant/constant.dart';
-
 import 'package:provider/provider.dart';
 
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../common_widgets/background_scaffold.dart';
 import '../../../providers/auth_provider.dart';
 
 class VerificationScreen extends StatefulWidget {
@@ -40,6 +35,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   color: Colors.grey[800],
                   fontWeight: FontWeight.w500),
             ),
+            Text(widget.email),
             SizedBox(height: 16.sp),
             const Text(
               "Please check your email for a link to verify your email address.\nonce verified you'll be able to continue.",
@@ -51,18 +47,19 @@ class _VerificationScreenState extends State<VerificationScreen> {
               size: 80.w,
               color: GreenColors.kMainColor,
             ),
-            loading ? CircularProgressIndicator() : SizedBox(),
+            loading ? const CircularProgressIndicator() : const SizedBox(),
             SizedBox(height: 16.sp),
             GreenButton(
               text: "Get Verification Link",
               onPressed: () {
                 AuthProvider.verificationTimer(context);
+                authProvider.sendEmailVerification(context);
                 setState(() {
                   loading = true;
                 });
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             if (loading)
               RichText(
                 text: TextSpan(

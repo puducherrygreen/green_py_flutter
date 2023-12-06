@@ -30,7 +30,8 @@ class ImageForView extends StatelessWidget {
               ),
             ),
             SizedBox(height: 2.h),
-            Text(DateFormatterHelper.formattedDate(stringDate: imageModel.date))
+            const Text("Photo Taken Date"),
+            Text(DateFormatterHelper.ddMMyy(stringDate: imageModel.date))
           ],
         ),
       ),

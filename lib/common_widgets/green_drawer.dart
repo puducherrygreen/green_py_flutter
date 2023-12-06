@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:green_puducherry/providers/notification_provider.dart';
+import 'package:green_puducherry/providers/plant_provider.dart';
+import 'package:green_puducherry/screens/home/pages/home.dart';
 import 'package:green_puducherry/screens/notification/pages/query_list_page.dart';
-
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../constant/green_images.dart';
 import '../helpers/my_navigation.dart';
 import '../providers/auth_provider.dart';
 import '../providers/bottom_nav_provider.dart';
-import '../screens/add_photo/pages/photo_added_messege.dart';
 import '../screens/auth/pages/lets_start.dart';
 import '../screens/gallery/pages/selected_image_gallery.dart';
 import '../screens/notification/pages/notification_page.dart';
@@ -24,10 +25,11 @@ class GreenDrawer extends StatelessWidget {
     final authProvider = Provider.of<AuthProvider>(context);
     final bottomNavProvider = Provider.of<BottomNavProvider>(context);
     final notificationProvider = Provider.of<NotificationProvider>(context);
+    PlantProvider plantProvider = Provider.of<PlantProvider>(context);
 
     return Drawer(
       width: 0.7.sw,
-      backgroundColor: Color(0xffD2FBCD),
+      backgroundColor: const Color(0xffD2FBCD),
       child: ListView(
         padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 40.h),
         children: [
@@ -40,18 +42,33 @@ class GreenDrawer extends StatelessWidget {
           Center(child: GText("${authProvider.user?.email}")),
           SizedBox(height: 10.h),
           const DrawerListTail(label: "Profile", page: ProfilePage()),
-          const DrawerListTail(
-            label: "Notification",
-            page: NotificationPage(),
+          DrawerListTail(
+            label: "Instruction",
+            onPressed: () async {
+              print("Navigate to Instruction page");
+              // notificationProvider.getAllNotification();
+
+              MyNavigation.to(context,
+                  ShowCaseWidget(builder: Builder(builder: (context) {
+                return Home(showcaseHidden: false);
+              })));
+            },
           ),
           if (notificationProvider.allQueries != null)
-            const DrawerListTail(
-              label: "Query",
-              page: QueryListPage(),
+            DrawerListTail(
+              label: "Response for Your Query testing",
+              onPressed: () async {
+                notificationProvider.getAllQueryResponse();
+
+                MyNavigation.to(context, QueryListPage());
+              },
             ),
           DrawerListTail(
             label: "Image Gallery",
-            page: SelectedImageGallery(),
+            onPressed: () {
+              plantProvider.getAllSelectedPlant();
+              MyNavigation.to(context, SelectedImageGallery());
+            },
           ),
           DrawerListTail(
             label: "Logout",
@@ -96,8 +113,7 @@ class DrawerListTail extends StatelessWidget {
                 }
               },
           child: Container(
-            height: 35.h,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Row(
               children: [
                 Expanded(

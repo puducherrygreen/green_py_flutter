@@ -53,11 +53,15 @@ class QCPushNotificationHelper {
   }
 
   Future<void> initNotification() async {
-    await _firebaseMessaging.requestPermission();
-    await FirebaseMessaging.instance.setAutoInitEnabled(true);
-    final fCMToken = await _firebaseMessaging.getToken();
-    DeviceToken.setDeviceToken(fCMToken);
-    await initPushNotifications();
-    await NotificationManager().initNotification();
+    try {
+      await _firebaseMessaging.requestPermission();
+      await FirebaseMessaging.instance.setAutoInitEnabled(true);
+      final fCMToken = await _firebaseMessaging.getToken();
+      DeviceToken.setDeviceToken(fCMToken);
+      await initPushNotifications();
+      await NotificationManager().initNotification();
+    } catch (e) {
+      print('init notification error');
+    }
   }
 }

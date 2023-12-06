@@ -3,7 +3,6 @@ import 'package:green_puducherry/common_widgets/background_scaffold.dart';
 import 'package:green_puducherry/common_widgets/common_widgets.dart';
 import 'package:green_puducherry/common_widgets/green_appbar.dart';
 import 'package:green_puducherry/common_widgets/green_buttons.dart';
-import 'package:green_puducherry/common_widgets/image_for_profile.dart';
 import 'package:green_puducherry/constant/constant.dart';
 import 'package:green_puducherry/models/plant_image_model.dart';
 import 'package:green_puducherry/providers/plant_provider.dart';
@@ -39,9 +38,9 @@ class SelectedImageGallery extends StatelessWidget {
   Widget build(BuildContext context) {
     final plantProvider = Provider.of<PlantProvider>(context);
     return BackgroundScaffold(
-        appBar: greenAppBar(title: "Image Gallery", leading: GreenBackButton()),
+        appBar: greenAppBar(title: "Image Gallery", leading: const GreenBackButton()),
         body: GridView.count(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           crossAxisCount: 2,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,

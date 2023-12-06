@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:green_puducherry/common_widgets/green_buttons.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:green_puducherry/constant/constant.dart';
 
 import 'notification_button.dart';
@@ -12,6 +12,7 @@ AppBar greenAppBar({
   bool enableNotificationButton = false,
   Color? backgroundColor,
   TextStyle? titleStyle,
+  Widget? notificationWidget,
 }) {
   return AppBar(
     backgroundColor: backgroundColor ?? Colors.transparent,
@@ -19,15 +20,16 @@ AppBar greenAppBar({
     title: title != null
         ? Text(
             title,
-            style: titleStyle ?? TextStyle(color: GreenColors.kMainColor),
+            style: titleStyle ?? const TextStyle(color: GreenColors.kMainColor),
           )
         : null,
     elevation: 0,
     leading: leading,
     actions: [
       ...action ?? [],
-      if (enableNotificationButton) NotificationButton(),
-      SizedBox(width: 10)
+      if (enableNotificationButton)
+        notificationWidget ?? const NotificationButton(),
+      SizedBox(width: 10.w)
     ],
     bottom: bottom,
   );

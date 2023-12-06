@@ -1,4 +1,3 @@
-import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:green_puducherry/common_widgets/common_widgets.dart';
@@ -15,7 +14,7 @@ import '../../../constant/constant.dart';
 import '../../../helpers/pop_scope_function.dart';
 
 class Contact extends StatefulWidget {
-  Contact({super.key});
+  const Contact({super.key});
 
   @override
   State<Contact> createState() => _ContactState();
@@ -43,7 +42,7 @@ class _ContactState extends State<Contact> {
         loading: loading,
         isDashboard: true,
         scaffoldKey: scaffoldKey,
-        drawer: GreenDrawer(),
+        drawer: const GreenDrawer(),
         appBar: greenAppBar(
             title: "Contact Us",
             leading: GreenMenuButton(
@@ -74,7 +73,7 @@ class _ContactState extends State<Contact> {
                             maxLine: 4,
                             keyboardType: TextInputType.multiline,
                           ),
-                          Divider(),
+                          const Divider(),
                           Text(
                             GreenText.kQueryContent,
                             style: TextStyle(
@@ -144,7 +143,7 @@ class _ContactState extends State<Contact> {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                        "© App designed and developed by ENVIS HUB, Puducherry."),
+                                        "© App designed and developed by EIACP HUB, Puducherry."),
                                   ),
                                 ],
                               )
@@ -153,45 +152,38 @@ class _ContactState extends State<Contact> {
                         ],
                       ),
                     )),
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GreenButton(
-                        text: "Send Query",
-                        onPressed: () async {
-                          FocusScope.of(context).unfocus();
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: GreenButton(
+                    text: "Send Query",
+                    onPressed: () async {
+                      FocusScope.of(context).unfocus();
 
-                          if (queryValidater()) {
-                            loading = true;
-                            setState(() {});
-                            try {
-                              await OtherServices.sendQuery(
-                                  query: queryController.text,
-                                  userId: authProvider.userModel!.id);
-                              queryController.clear();
-                              if (context.mounted) {
-                                VxToast.show(context,
-                                    msg: "Your query has been sent");
-                              }
-
-                              print('completed query .....................');
-                            } catch (e) {
-                              if (context.mounted) {
-                                VxToast.show(context,
-                                    msg: "Something went wrong");
-                              }
-                            }
-                            loading = false;
-                            setState(() {});
-                          } else {
+                      if (queryValidater()) {
+                        loading = true;
+                        setState(() {});
+                        try {
+                          await OtherServices.sendQuery(
+                              query: queryController.text,
+                              userId: authProvider.userModel!.id);
+                          queryController.clear();
+                          if (context.mounted) {
                             VxToast.show(context,
-                                msg: "minimum 3 words required");
+                                msg: "Your query has been sent");
                           }
-                        },
-                      ),
-                    ],
+
+                          print('completed query .....................');
+                        } catch (e) {
+                          if (context.mounted) {
+                            VxToast.show(context, msg: "Something went wrong");
+                          }
+                        }
+                        loading = false;
+                        setState(() {});
+                      } else {
+                        VxToast.show(context, msg: "minimum 3 words required");
+                      }
+                    },
                   ),
                 ),
               ],

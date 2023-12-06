@@ -1,14 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:green_puducherry/helpers/my_navigation.dart';
-import 'package:green_puducherry/screens/home/pages/home.dart';
 import 'package:provider/provider.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 import '../../common_widgets/common_widgets.dart';
 import '../../constant/constant.dart';
 import '../../providers/auth_provider.dart';
-import '../../providers/loading_provider.dart';
 
 class OauthButton extends StatelessWidget {
   const OauthButton({

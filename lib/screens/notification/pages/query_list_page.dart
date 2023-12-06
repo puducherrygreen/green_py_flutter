@@ -15,7 +15,7 @@ class QueryListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final np = Provider.of<NotificationProvider>(context);
     return BackgroundScaffold(
-      appBar: greenAppBar(title: "Query Response", leading: GreenBackButton()),
+      appBar: greenAppBar(title: "Response", leading: const GreenBackButton()),
       body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 10.w),
           children: np.allQueries != null

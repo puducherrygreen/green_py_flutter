@@ -59,16 +59,16 @@ class _MyTextFieldState extends State<MyTextField> {
               filled: true,
               fillColor: GreenColors.kInputBg,
               hintText: widget.hintText,
-              hintStyle: TextStyle(color: Colors.grey),
+              hintStyle: const TextStyle(color: Colors.grey),
               suffixIcon: widget.isPassword
                   ? IconButton(
                       onPressed: toggleShowPassword,
                       icon: showPassword
-                          ? Icon(Icons.visibility_off)
-                          : Icon(Icons.visibility),
+                          ? const Icon(Icons.visibility_off)
+                          : const Icon(Icons.visibility),
                       color: GreenColors.kMainColor,
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
             ),
             keyboardType: widget.keyboardType,
             style: TextStyle(fontSize: 18.sp, color: GreenColors.kMainColor),
@@ -81,7 +81,7 @@ class _MyTextFieldState extends State<MyTextField> {
               left: 20,
               child: Container(
                 color: Colors.white,
-                padding: EdgeInsets.all(3),
+                padding: const EdgeInsets.all(3),
                 child: Text(
                   widget.errorText ?? "Invalid value",
                   style: TextStyle(color: Colors.red[600]),

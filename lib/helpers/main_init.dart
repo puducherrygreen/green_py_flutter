@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import '../firebase_options.dart';
@@ -16,7 +15,7 @@ mainInit() async {
   } else {
     await Firebase.initializeApp(options: DefaultFirebaseOptions.android);
     await QCPushNotificationHelper().initNotification();
-    final fcmToken = await FirebaseMessaging.instance.getToken();
-    print('----TK -- $fcmToken');
+    // final fcmToken = await FirebaseMessaging.instance.getToken();
+    // print('----TK -- $fcmToken');
   }
 }

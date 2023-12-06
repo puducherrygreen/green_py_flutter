@@ -16,7 +16,7 @@ class UserModel {
   final String? deviceToken;
   final RegionModel region;
   final CommuneModel commune;
-  PlantModel? plantModel;
+  // PlantModel? plantModel;
 
   UserModel({
     required this.id,
@@ -31,7 +31,7 @@ class UserModel {
     required this.region,
     required this.commune,
     required this.deviceToken,
-    this.plantModel,
+    // this.plantModel,
   });
 
   factory UserModel.fromJson(json) {
@@ -48,9 +48,9 @@ class UserModel {
       deviceToken: json['deviceToken'],
       region: RegionModel.fromJson(json['region']),
       commune: CommuneModel.fromJson(json['commune']),
-      plantModel: json["plantDetailsData"] != null
-          ? PlantModel.fromJson(json["plantDetailsData"])
-          : null,
+      // plantModel: json["plantDetailsData"] != null
+      //     ? PlantModel.fromJson(json["plantDetailsData"])
+      //     : null,
     );
   }
 

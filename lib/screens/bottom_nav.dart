@@ -6,9 +6,10 @@ import 'package:green_puducherry/helpers/my_navigation.dart';
 import 'package:green_puducherry/screens/contact/pages/contact.dart';
 import 'package:green_puducherry/screens/home/pages/home.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../providers/bottom_nav_provider.dart';
-import 'gallery/pages/gallery.dart';
+import 'gallery/pages/all_plant_gallery.dart';
 
 class GreenBottomNav extends StatelessWidget {
   const GreenBottomNav({super.key});
@@ -16,7 +17,7 @@ class GreenBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-      height: GreenValues.kAppbarHeight - 20.h,
+      height: GreenValues.kAppbarHeight,
       color: Colors.white.withOpacity(0.8),
       elevation: 0,
       child: Row(
@@ -24,16 +25,19 @@ class GreenBottomNav extends StatelessWidget {
           BottomNavIcon(
             index: 0,
             iconData: FeatherIcons.home,
-            screen: Home(),
+            screen: ShowCaseWidget(
+              builder:
+                  Builder(builder: (context) => Home(showcaseHidden: true)),
+            ),
             label: "Home",
           ),
-          BottomNavIcon(
+          const BottomNavIcon(
             index: 1,
             iconData: FeatherIcons.image,
-            screen: Gallery(),
+            screen: AllPlantsGallery(),
             label: "Gallery",
           ),
-          BottomNavIcon(
+          const BottomNavIcon(
             index: 2,
             iconData: FeatherIcons.mail,
             screen: Contact(),

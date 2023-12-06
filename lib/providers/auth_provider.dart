@@ -1,13 +1,14 @@
 import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:green_puducherry/constant/firebase_exception.dart';
 import 'package:green_puducherry/constant/green_text.dart';
 import 'package:green_puducherry/helpers/local_storage.dart';
 import 'package:green_puducherry/models/region_model.dart';
 import 'package:green_puducherry/models/user_model.dart';
 import 'package:green_puducherry/screens/auth/pages/profile_information.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../helpers/my_navigation.dart';
@@ -47,7 +48,7 @@ class AuthProvider extends ChangeNotifier {
       return MyFirebaseException.kUserExist;
     }
     user = data;
-    await LocalStorage.setBool(GreenText.kIsPending, true);
+
     notifyListeners();
     return data;
   }
@@ -70,9 +71,20 @@ class AuthProvider extends ChangeNotifier {
       print("Google O Auth : $data");
       if (data != null) {
         userModel = data;
+        bool showcaseHidden =
+            await LocalStorage.getBool(GreenText.kShowcase) ?? false;
         notifyListeners();
         if (context.mounted) {
-          MyNavigation.to(context, Home());
+          MyNavigation.to(
+            context,
+            ShowCaseWidget(
+              builder: Builder(
+                builder: (context) => Home(
+                  showcaseHidden: showcaseHidden,
+                ),
+              ),
+            ),
+          );
         }
       }
       if (data == null) {
@@ -128,8 +140,12 @@ class AuthProvider extends ChangeNotifier {
       FirebaseAuth.instance.currentUser?.reload();
       final user = FirebaseAuth.instance.currentUser;
       if (user!.emailVerified) {
+        LocalStorage.setBool(GreenText.kIsLogged, true);
+        await LocalStorage.setBool(GreenText.kIsPending, true);
         timer.cancel();
-        MyNavigation.replace(context, ProfileInformation());
+        if (context.mounted) {
+          MyNavigation.replace(context, const ProfileInformation());
+        }
       }
     });
   }

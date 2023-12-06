@@ -15,7 +15,7 @@ class ViewNotificationMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BackgroundScaffold(
-      appBar: greenAppBar(title: "", leading: GreenBackButton()),
+      appBar: greenAppBar(title: "", leading: const GreenBackButton()),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
@@ -29,7 +29,7 @@ class ViewNotificationMessage extends StatelessWidget {
                   fontWeight: FontWeight.w600),
               overflow: TextOverflow.ellipsis,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               message.capitalized,
               style: TextStyle(

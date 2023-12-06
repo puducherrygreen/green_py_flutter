@@ -1,5 +1,5 @@
-import 'package:green_puducherry/models/available_plant_model.dart';
 import 'package:green_puducherry/models/plant_image_model.dart';
+import 'package:green_puducherry/models/plant_land_model.dart';
 
 class PlantModel {
   final String id;
@@ -11,9 +11,11 @@ class PlantModel {
   final String latitude;
   final String status;
   final String date;
+  final String? updateDateNextPhoto;
   final bool nextPhotoEnabled;
   final List<PlantImageModel> plantImages;
   final String availablePlantId;
+  final PlantLandModel? plantLand;
 
   PlantModel({
     required this.id,
@@ -24,8 +26,10 @@ class PlantModel {
     required this.longitude,
     required this.latitude,
     required this.status,
+    this.plantLand,
     required this.date,
     required this.nextPhotoEnabled,
+    this.updateDateNextPhoto,
     required this.plantImages,
     required this.availablePlantId,
   });
@@ -40,6 +44,10 @@ class PlantModel {
         }
       }
     }
+    print('plant-land---------------------------------------');
+    print(json['plantLand']);
+    print(json);
+    print('plant-land---------------------------------------');
 
     return PlantModel(
       id: json['_id'],
@@ -50,7 +58,9 @@ class PlantModel {
       longitude: json['longitude'],
       latitude: json['latitude'],
       status: json['status'],
+      plantLand: PlantLandModel.fromJson(json['plantLand']),
       date: json['date'],
+      updateDateNextPhoto: json['updateDateNextPhoto'],
       nextPhotoEnabled: json['nextPhotoEnabled'],
       plantImages: plantImagesList,
       availablePlantId: json['availablePlantId'],
@@ -66,7 +76,9 @@ class PlantModel {
     mapData['longitude'] = longitude;
     mapData['latitude'] = latitude;
     mapData['status'] = status;
+    mapData['plantLand'] = plantLand?.toMap();
     mapData['date'] = date;
+    mapData['updateDateNextPhoto'] = updateDateNextPhoto;
     mapData['nextPhotoEnabled'] = nextPhotoEnabled;
     mapData['availablePlantId'] = availablePlantId;
     mapData['plantImagesData'] =

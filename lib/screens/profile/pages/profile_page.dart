@@ -4,7 +4,6 @@ import 'package:green_puducherry/common_widgets/background_scaffold.dart';
 import 'package:green_puducherry/common_widgets/common_widgets.dart';
 import 'package:green_puducherry/common_widgets/green_appbar.dart';
 import 'package:green_puducherry/common_widgets/green_buttons.dart';
-import 'package:green_puducherry/constant/constant.dart';
 import 'package:green_puducherry/helpers/date_formatter_helper.dart';
 import 'package:green_puducherry/models/plant_image_model.dart';
 import 'package:green_puducherry/models/plant_model.dart';
@@ -12,8 +11,8 @@ import 'package:green_puducherry/providers/auth_provider.dart';
 import 'package:green_puducherry/providers/plant_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/profile_info_tail.dart';
 import '../../../common_widgets/image_for_profile.dart';
+import '../widgets/profile_info_tail.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -25,9 +24,9 @@ class ProfilePage extends StatelessWidget {
         Provider.of<PlantProvider>(context).currentPlantModel;
     return BackgroundScaffold(
         appBar: greenAppBar(
-            title: "Profile Information", leading: GreenBackButton()),
+            title: "Profile Information", leading: const GreenBackButton()),
         body: userModel == null
-            ? SizedBox()
+            ? const SizedBox()
             : SingleChildScrollView(
                 child: Column(
                   children: [
@@ -48,7 +47,7 @@ class ProfilePage extends StatelessWidget {
                     if (currentPlantModel != null)
                       Column(
                         children: [
-                          Divider(thickness: 2),
+                          const Divider(thickness: 2),
                           ProfileInfoTail(
                               field: "Tree Name",
                               value: currentPlantModel.plantName),
@@ -62,7 +61,7 @@ class ProfilePage extends StatelessWidget {
                               field: "Status", value: currentPlantModel.status),
                           ProfileInfoTail(
                               field: "Planted date",
-                              value: DateFormatterHelper.formattedDate(
+                              value: DateFormatterHelper.ddMMyy(
                                   stringDate: currentPlantModel.date)),
                           Padding(
                             padding: EdgeInsets.symmetric(

@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:green_puducherry/helpers/local_storage.dart';
-import 'package:green_puducherry/providers/auth_provider.dart';
-import 'package:green_puducherry/services/auth_service.dart';
-import 'package:provider/provider.dart';
-
-import '../../../common_widgets/common_widgets.dart';
-
 import 'package:green_puducherry/helpers/my_navigation.dart';
 import 'package:green_puducherry/screens/auth/pages/auth_landing.dart';
+
+import '../../../common_widgets/common_widgets.dart';
 import '../../../constant/constant.dart';
 import '../../../helpers/pop_scope_function.dart';
-import '../../../models/user_model.dart';
 import '../widgets/green_puducherry.dart';
 
 class LetsStart extends StatelessWidget {
@@ -38,12 +33,12 @@ class LetsStart extends StatelessWidget {
                     Image.asset(GreenImages.kLionLogo)
                   ],
                 )),
-            GreenPuducherry(),
+            const GreenPuducherry(),
             GreenButton(
               text: "Let's Start",
               onPressed: () {
                 LocalStorage.setBool(GreenText.kLetsStart, true);
-                MyNavigation.to(context, AuthLanding());
+                MyNavigation.to(context, const AuthLanding());
               },
             ),
             const SizedBox()

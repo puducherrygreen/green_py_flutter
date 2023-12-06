@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../constant/constant.dart';
 import 'g_text.dart';
 import 'green_box.dart';
@@ -47,7 +48,7 @@ class GreenButton extends StatelessWidget {
                     Container(
                       height: 50,
                       width: 50,
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                           color: Colors.black.withOpacity(0.05),
                           borderRadius: BorderRadius.circular(30)),

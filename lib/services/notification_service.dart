@@ -51,6 +51,7 @@ class NotificationService {
     List? data = jsonDecode(res.body);
     print('-------------query details data ------------');
     print(data);
+
     print('-------------query details data ------------');
     if (data != null) {
       List<QueryModel> queryModel = [];

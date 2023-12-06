@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:green_puducherry/constant/green_text.dart';
 import 'package:green_puducherry/helpers/local_storage.dart';
 import 'package:green_puducherry/models/plant_image_model.dart';
+import 'package:green_puducherry/models/plant_land_model.dart';
 import 'package:green_puducherry/models/plant_model.dart';
 import 'package:green_puducherry/services/plant_service.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -12,30 +13,50 @@ import '../constant/green_colors.dart';
 import '../helpers/my_navigation.dart';
 import '../models/available_plant_model.dart';
 import '../screens/add_photo/pages/camera_page.dart';
-import '../screens/add_photo/pages/photo_info_page.dart';
-import 'auth_provider.dart';
 
 class PlantProvider extends ChangeNotifier {
-  final AuthProvider _authProvider = AuthProvider();
   PlantProvider() {
     loadLocalPlant();
+    loadPlants();
     getAllSelectedPlant();
-    getCurrentLocation();
+    // getCurrentLocation();
+    // getAllPermissionRequest();
   }
 
   final PlantService _plantService = PlantService();
 
   List<AvailablePlantModel> availablePlants = [];
   AvailablePlantModel? selectedPlantModel;
-  List<PlantModel> plantModel = [];
+  List<PlantModel> plantModels = [];
+  List<PlantLandModel> allPlantLands = [];
   PlantModel? currentPlantModel;
   bool isAlive = true;
   Position? location;
   List<PlantImageModel> allSelectedPlant = [];
+  PlantLandModel? plantLand;
 
   String getCurrentTime() {
     DateTime ct = DateTime.now();
     return "${ct.day}-${ct.month}-${ct.year}";
+  }
+
+  setPlantType(PlantLandModel plantTypeValue) async {
+    plantLand = plantTypeValue;
+    await getAvailablePlants(landId: plantTypeValue.id);
+    notifyListeners();
+  }
+
+  getPlantLands() async {
+    allPlantLands.clear();
+    List? data = await _plantService.getPlantLands();
+    for (Map<String, dynamic> land in data ?? []) {
+      allPlantLands.add(PlantLandModel.fromJson(land));
+    }
+    notifyListeners();
+  }
+
+  removePlantType() {
+    plantLand = null;
   }
 
   setPlantStatus(bool status) {
@@ -43,17 +64,27 @@ class PlantProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setCurrentPlant(PlantModel plantModel) {
-    currentPlantModel = plantModel;
-    notifyListeners();
+  setCurrentPlant(PlantModel plantModel) async {
+    String? userId = await LocalStorage.getString(GreenText.kUserId);
+    if (userId != null) {
+      PlantModel? newPlantModel =
+          await _plantService.getPlantByPlantIs(plantId: plantModel.id);
+      if (newPlantModel != null) {
+        currentPlantModel = newPlantModel;
+      } else {
+        currentPlantModel = plantModel;
+      }
+      notifyListeners();
+    }
   }
 
   removeCurrentPlant() {
     currentPlantModel = null;
   }
 
-  getAvailablePlants() async {
-    List<dynamic> listOfPlants = await _plantService.getAvailablePlants();
+  getAvailablePlants({required String landId}) async {
+    List<dynamic> listOfPlants =
+        await _plantService.getAvailablePlants(landId: landId);
     availablePlants =
         listOfPlants.map((e) => AvailablePlantModel.fromJson(e)).toList();
     print(availablePlants);
@@ -63,24 +94,31 @@ class PlantProvider extends ChangeNotifier {
   Future<List<PlantModel>?> getUserPlants({required String userId}) async {
     List<PlantModel>? resPlant =
         await _plantService.getUserPlants(userId: userId);
-    plantModel = resPlant ?? [];
+    plantModels = resPlant ?? [];
     print('model trest -----------');
     print('userId-- : $userId');
-    print(plantModel);
+    print(plantModels);
     print('model trest -----------');
-    if (plantModel.isNotEmpty) {
+    if (plantModels.isNotEmpty) {
       // LocalStorage.setMap(GreenText.kPlantInfo, plantModel?.convertIntoMap());
       LocalStorage.setList(GreenText.kPlantInfo, convertAllPlantToMap());
     }
-    loadLocalPlant();
+    // loadLocalPlant();
 
     notifyListeners();
     return resPlant;
   }
 
+  loadPlants() async {
+    String? userId = await LocalStorage.getString(GreenText.kUserId);
+    if (userId != null) {
+      getUserPlants(userId: userId);
+    }
+  }
+
   List<Map<String, dynamic>> convertAllPlantToMap() {
     List<Map<String, dynamic>> mapList = [];
-    for (PlantModel i in plantModel) {
+    for (PlantModel i in plantModels) {
       mapList.add(i.convertIntoMap());
     }
     return mapList;
@@ -135,8 +173,8 @@ class PlantProvider extends ChangeNotifier {
   }
 
   getAllSelectedPlant() async {
-    List<PlantImageModel>? p_image = await _plantService.getSelectedPlant();
-    allSelectedPlant = p_image ?? [];
+    List<PlantImageModel>? pImage = await _plantService.getSelectedPlant();
+    allSelectedPlant = pImage ?? [];
     notifyListeners();
   }
 
@@ -149,26 +187,22 @@ class PlantProvider extends ChangeNotifier {
       for (Map i in plantInfo) {
         allPlantModel.add(PlantModel.fromJson(i));
       }
-      plantModel = allPlantModel;
+      plantModels = allPlantModel;
       notifyListeners();
     } else {
       String? userId = await LocalStorage.getString(GreenText.kUserId);
       print("plant Info  with userId--- $userId--------------");
-
-      if (userId != null) {
-        await getUserPlants(userId: userId);
-      }
+      return;
     }
   }
 
-  //////
   myDialogShowStatusDialog(BuildContext context,
       {required PlantProvider plantProvider}) {
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("We need to Know Your Plant Status"),
+            title: const Text("We need to Know Your Plant Status"),
             titleTextStyle: TextStyle(fontSize: 15.sp, color: Colors.grey[700]),
             content: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -177,7 +211,7 @@ class PlantProvider extends ChangeNotifier {
                   color: GreenColors.kMainColor,
                   onPressed: () {
                     plantProvider.setPlantStatus(true);
-                    MyNavigation.to(context, CameraPage());
+                    MyNavigation.to(context, const CameraPage());
                   },
                   child: const Text(
                     "Alive",
@@ -188,7 +222,7 @@ class PlantProvider extends ChangeNotifier {
                   color: Colors.red[600],
                   onPressed: () {
                     plantProvider.setPlantStatus(false);
-                    MyNavigation.to(context, CameraPage());
+                    MyNavigation.to(context, const CameraPage());
                   },
                   child: const Text(
                     "Dead",
@@ -240,12 +274,39 @@ class PlantProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> _requestAudioPermission() async {
+    final status = await Permission.audio.request();
+    if (status.isGranted) {
+      // Permission granted, you can now use the camera.
+    } else {
+      // Permission denied.
+    }
+  }
+
+  Future<void> _requestMicroPermission() async {
+    final status = await Permission.microphone.request();
+    if (status.isGranted) {
+      // Permission granted, you can now use the camera.
+    } else {
+      // Permission denied.
+    }
+  }
+
   Future<void> _requestLocationPermission() async {
     final status = await Permission.location.request();
     if (status.isGranted) {
       // Permission granted, you can now use the location.
+      location = await Geolocator.getCurrentPosition();
     } else {
       // Permission denied.
     }
+  }
+
+  Future<void> getAllPermissionRequest() async {
+    await _requestLocationPermission();
+    await _requestCameraPermission();
+    await _requestAudioPermission();
+    await _requestMicroPermission();
+    await getCurrentLocation();
   }
 }

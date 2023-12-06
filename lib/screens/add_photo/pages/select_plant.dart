@@ -1,34 +1,135 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:green_puducherry/common_widgets/background_scaffold.dart';
 import 'package:green_puducherry/common_widgets/common_widgets.dart';
 import 'package:green_puducherry/common_widgets/green_appbar.dart';
 import 'package:green_puducherry/common_widgets/green_buttons.dart';
 import 'package:green_puducherry/common_widgets/image_for_profile.dart';
 import 'package:green_puducherry/constant/constant.dart';
 import 'package:green_puducherry/helpers/my_navigation.dart';
+import 'package:green_puducherry/helpers/validation_helper.dart';
+import 'package:green_puducherry/providers/auth_provider.dart';
 import 'package:green_puducherry/providers/plant_provider.dart';
 import 'package:green_puducherry/screens/add_photo/pages/camera_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-
-import 'photo_info_page.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class SelectPlant extends StatefulWidget {
-  const SelectPlant({super.key});
+  const SelectPlant({super.key, this.enableDropDown = false});
+  final bool enableDropDown;
 
   @override
   State<SelectPlant> createState() => _SelectPlantState();
 }
 
 class _SelectPlantState extends State<SelectPlant> {
+  final TextEditingController region = TextEditingController();
+
+  final TextEditingController commune = TextEditingController();
+
   bool isValid = true;
+  bool regionValidate = true;
+  bool communeValidate = true;
+
+  bool loading = false;
+
+  getRequest() async {
+    final plantProvider = Provider.of<PlantProvider>(context, listen: false);
+    final locationStatus = await Permission.location.status;
+    final cameraStatus = await Permission.camera.status;
+    final micStatus = await Permission.microphone.status;
+    final audioStatus = await Permission.audio.status;
+    if (!locationStatus.isGranted) {
+      await plantProvider.getAllPermissionRequest();
+    }
+    if (!cameraStatus.isGranted) {
+      await plantProvider.getAllPermissionRequest();
+    }
+    if (!micStatus.isGranted) {
+      await plantProvider.getAllPermissionRequest();
+    }
+    if (!audioStatus.isGranted) {
+      await plantProvider.getAllPermissionRequest();
+    }
+  }
+
+  Widget buildDropDown({required AuthProvider authProvider}) {
+    return Column(
+      children: [
+        SizedBox(height: 10.h),
+        MyDropDown(
+          border: regionValidate ? null : Colors.red,
+          hintText: "Region",
+          errorText: "Invalid Region",
+          onChange: (value) async {
+            loading = true;
+            setState(() {});
+            print("Region : $value");
+            region.text = value;
+            commune.clear();
+            await authProvider.changeCommuneState(state: false);
+            await authProvider.changeRegion(regionName: value);
+
+            regionValidate = true;
+            loading = false;
+            setState(() {});
+          },
+          items: authProvider.allRegion.map((e) => e.regionName).toList(),
+        ),
+        SizedBox(height: 10.h),
+        authProvider.communeState
+            ? MyDropDown(
+                border: communeValidate ? null : Colors.red,
+                hintText: "Commune/Municipality",
+                errorText: "Invalid Commune/Municipality",
+                value: commune.text.isEmpty ? null : commune.text,
+                onChange: (value) async {
+                  print("Commune/Municipality : $value");
+                  commune.text = value;
+                  await authProvider.changeCommune(communeName: value);
+                  communeValidate = true;
+                  setState(() {});
+                },
+                items:
+                    authProvider.allCommune.map((e) => e.communeName).toList(),
+              )
+            : const MyDropDown(
+                hintText: "Commune/Municipality",
+                items: [],
+              ),
+        SizedBox(height: 10.h),
+      ],
+    );
+  }
+
+  bool validateAll({required PlantProvider plantProvider}) {
+    if (plantProvider.selectedPlantModel == null &&
+        plantProvider.currentPlantModel == null) {
+      isValid = false;
+    }
+    communeValidate =
+        ValidationHelper.nameValidation(value: commune.text.trim());
+    regionValidate = ValidationHelper.nameValidation(value: region.text.trim());
+
+    setState(() {});
+    bool drop =
+        widget.enableDropDown ? communeValidate && regionValidate : true;
+    return isValid && drop;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(const Duration(seconds: 2)).then((value) => getRequest());
+  }
 
   @override
   Widget build(BuildContext context) {
     final plantProvider = Provider.of<PlantProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
     return BackgroundScaffold(
-      appBar: greenAppBar(leading: GreenBackButton()),
+      appBar: greenAppBar(leading: const GreenBackButton()),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 30.w),
         child: Column(
@@ -47,10 +148,11 @@ class _SelectPlantState extends State<SelectPlant> {
               plantProvider.currentPlantModel != null
                   ? "Your plant"
                   : "Register Your Plant",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 15.h),
-
+            if (widget.enableDropDown)
+              buildDropDown(authProvider: authProvider),
             plantProvider.currentPlantModel == null
                 ? MyDropDown(
                     border: isValid ? null : Colors.red,
@@ -87,7 +189,17 @@ class _SelectPlantState extends State<SelectPlant> {
                           print(e);
                           return ImageForView(imageModel: e);
                         }).toList()),
-                      )
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Text(
+                          "Next chance to take a ${plantProvider.currentPlantModel?.plantName} will be on ${plantProvider.currentPlantModel?.updateDateNextPhoto}",
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ],
                   ),
             const Spacer(),
@@ -99,15 +211,8 @@ class _SelectPlantState extends State<SelectPlant> {
               onPressed: () async {
                 final locationStatus = await Permission.location.status;
                 final cameraStatus = await Permission.camera.status;
-                print(cameraStatus);
+
                 if (locationStatus.isGranted && cameraStatus.isGranted) {
-                  if (plantProvider.selectedPlantModel == null &&
-                      plantProvider.currentPlantModel == null) {
-                    setState(() {
-                      isValid = false;
-                    });
-                    // return;
-                  }
                   if (plantProvider.currentPlantModel != null) {
                     if (context.mounted) {
                       await plantProvider.myDialogShowStatusDialog(context,
@@ -116,11 +221,14 @@ class _SelectPlantState extends State<SelectPlant> {
                     return;
                   }
                   if (context.mounted) {
-                    MyNavigation.to(context, const CameraPage());
+                    if (validateAll(plantProvider: plantProvider)) {
+                      MyNavigation.replace(context, const CameraPage());
+                    }
                   }
                 } else {
                   if (context.mounted) {
-                    await plantProvider.showPermissionRequestDialog(context);
+                    VxToast.show(context, msg: "Some permissions denied");
+                    // await plantProvider.showPermissionRequestDialog(context);
                   }
                 }
               },

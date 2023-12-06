@@ -55,7 +55,9 @@ dependencies:
   confetti: ^0.7.0
   flutter_local_notifications: ^16.1.0
   firebase_messaging: ^14.7.3
+  connectivity_plus: ^5.0.2
   internet_connection_checker: ^1.0.0+1
+  showcaseview: ^2.0.3
 
 
 dev_dependencies:

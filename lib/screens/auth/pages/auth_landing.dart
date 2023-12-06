@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:green_puducherry/helpers/my_navigation.dart';
-import 'package:green_puducherry/providers/loading_provider.dart';
 import 'package:green_puducherry/screens/auth/widgets/green_puducherry.dart';
 import 'package:provider/provider.dart';
-import 'package:velocity_x/velocity_x.dart';
+
 import '../../../common_widgets/common_widgets.dart';
 import '../../../constant/constant.dart';
 import '../../../providers/auth_provider.dart';
@@ -31,8 +30,8 @@ class _AuthLandingState extends State<AuthLanding> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(),
-              GreenPuducherry(),
+              const SizedBox(),
+              const GreenPuducherry(),
               Column(
                 children: [
                   OauthButton(
@@ -41,7 +40,9 @@ class _AuthLandingState extends State<AuthLanding> {
                       setState(() {});
                       try {
                         await authProvider.googleOauth(context);
-                      } catch (e) {}
+                      } catch (e) {
+                        print(e);
+                      }
                       loading = false;
                       setState(() {});
                     },
@@ -61,7 +62,7 @@ class _AuthLandingState extends State<AuthLanding> {
                       size: 25.sp,
                     ),
                     onPressed: () {
-                      MyNavigation.to(context, AuthWithEmail());
+                      MyNavigation.to(context, const AuthWithEmail());
                     },
                   ),
                 ],

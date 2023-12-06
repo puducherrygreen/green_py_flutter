@@ -4,9 +4,12 @@ import 'package:green_puducherry/constant/firebase_exception.dart';
 import 'package:green_puducherry/helpers/local_storage.dart';
 import 'package:green_puducherry/helpers/validation_helper.dart';
 import 'package:green_puducherry/providers/plant_provider.dart';
+import 'package:green_puducherry/screens/auth/pages/verification_screen.dart';
 import 'package:green_puducherry/screens/home/pages/home.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:velocity_x/velocity_x.dart';
+
 import '../../../common_widgets/common_widgets.dart';
 import '../../../constant/constant.dart';
 import '../../../helpers/my_navigation.dart';
@@ -58,14 +61,13 @@ class _AuthWithEmailState extends State<AuthWithEmail> {
             textColor: Colors.white,
             textSize: 16.sp);
       } else {
-        MyNavigation.replace(context, ProfileInformation());
+        // MyNavigation.replace(context, const ProfileInformation());
 
-        /// deployment enable
-        // MyNavigation.to(
-        //     context,
-        //     VerificationScreen(
-        //       email: emailController.text,
-        //     ));
+        MyNavigation.to(
+            context,
+            VerificationScreen(
+              email: emailController.text.toString().trim(),
+            ));
       }
     }
   }
@@ -82,12 +84,19 @@ class _AuthWithEmailState extends State<AuthWithEmail> {
             textColor: Colors.white,
             textSize: 16.sp);
       } else {
-        LocalStorage.setBool(GreenText.kIsLogged, true);
         plantProvider.loadLocalPlant();
-        MyNavigation.to(context, Home());
+        MyNavigation.to(
+            context,
+            ShowCaseWidget(
+                builder: Builder(
+                    builder: (context) => Home(
+                          showcaseHidden: true,
+                        ))));
       }
     }
   }
+
+  bool loading = false;
 
   @override
   void initState() {
@@ -99,128 +108,146 @@ class _AuthWithEmailState extends State<AuthWithEmail> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    loading = false;
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final plantProvider = Provider.of<PlantProvider>(context);
     return BackgroundScaffold(
+        loading: loading,
         body: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const SizedBox(),
-          const GreenPuducherry(),
-          Column(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: ListView(
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             children: [
-              MyTextField(
-                isValid: emailValidate,
-                controller: emailController,
-                isPassword: false,
-                hintText: "Email",
-                errorText: "Invalid Email",
-                keyboardType: TextInputType.emailAddress,
-                onChange: (val) {
-                  emailValidate = true;
-                  setState(() {});
-                },
+              const SizedBox(),
+              const GreenPuducherry(),
+              Column(
+                children: [
+                  MyTextField(
+                    isValid: emailValidate,
+                    controller: emailController,
+                    isPassword: false,
+                    hintText: "Email",
+                    errorText: "Invalid Email",
+                    keyboardType: TextInputType.emailAddress,
+                    onChange: (val) {
+                      emailValidate = true;
+                      setState(() {});
+                    },
+                  ),
+                  SizedBox(height: 10.h),
+                  MyTextField(
+                    isValid: passwordValidate,
+                    controller: passwordController,
+                    isPassword: true,
+                    hintText: 'Password',
+                    errorText: 'Invalid Password',
+                    onChange: (val) {
+                      passwordValidate = true;
+                      setState(() {});
+                    },
+                  ),
+                  isLogin
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: () async {
+                                final res = await authProvider.forgetPassword(
+                                    email: emailController.text);
+                                if (res == MyFirebaseException.kInvalidEmail) {
+                                  if (context.mounted) {
+                                    VxToast.show(context,
+                                        msg: "Invalid Email",
+                                        textColor: Colors.white,
+                                        bgColor: Colors.black);
+                                  }
+                                }
+                                print("forget password error $res");
+                              },
+                              child: GText(
+                                'Forget Password',
+                                style: TextStyle(fontSize: 16.sp),
+                              ),
+                            ),
+                          ],
+                        )
+                      : SizedBox(height: 10.h),
+                  GreenButton(
+                    text: isLogin ? "Login" : 'Sign Up',
+                    textColor: GreenColors.kMainColor,
+                    height: 40.h,
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    onPressed: () async {
+                      loading = true;
+                      setState(() {});
+                      FocusScopeNode currentFocus = FocusScope.of(context);
+                      if (!currentFocus.hasPrimaryFocus) {
+                        currentFocus.unfocus();
+                      }
+                      if (allValidation()) {
+                        if (isLogin) {
+                          await logIn(context, authProvider, plantProvider);
+                        } else {
+                          await signIn(context, authProvider);
+                        }
+                      } else {
+                        VxToast.show(context, msg: "Something went wrong");
+                      }
+                      loading = false;
+                      setState(() {});
+                    },
+                  ),
+                  SizedBox(height: 10.h),
+                  const ORBar(),
+                  SizedBox(height: 10.h),
+                  const OauthButton(),
+                ],
               ),
-              SizedBox(height: 10.h),
-              MyTextField(
-                isValid: passwordValidate,
-                controller: passwordController,
-                isPassword: true,
-                hintText: 'Password',
-                errorText: 'Invalid Password',
-                onChange: (val) {
-                  passwordValidate = true;
-                  setState(() {});
-                },
-              ),
-              isLogin
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () async {
-                            final res = await authProvider.forgetPassword(
-                                email: emailController.text);
-                            if (res == MyFirebaseException.kInvalidEmail) {
-                              if (context.mounted) {
-                                VxToast.show(context,
-                                    msg: "Invalid Email",
-                                    textColor: Colors.white,
-                                    bgColor: Colors.black);
-                              }
-                            }
-                            print("forget password error $res");
-
-                            Future.delayed(Duration(seconds: 2), () {
-                              print('delay value');
-                            });
-                          },
-                          child: GText(
-                            'Forget Password',
-                            style: TextStyle(fontSize: 16.sp),
-                          ),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: toggleMethod,
+                  child: !isLogin
+                      ? RichText(
+                          text: TextSpan(
+                              text: "Already have an account? ",
+                              style: TextStyle(
+                                  fontSize: 18.sp,
+                                  color: GreenColors.kMainColor),
+                              children: const [
+                                TextSpan(
+                                    text: "Login",
+                                    style: TextStyle(
+                                        color: GreenColors.kLinkColor))
+                              ]),
+                        )
+                      : RichText(
+                          text: TextSpan(
+                              text: "Don’t have an account? ",
+                              style: TextStyle(
+                                  fontSize: 18.sp,
+                                  color: GreenColors.kMainColor),
+                              children: const [
+                                TextSpan(
+                                    text: "Sign Up Free!",
+                                    style: TextStyle(
+                                        color: GreenColors.kLinkColor))
+                              ]),
                         ),
-                      ],
-                    )
-                  : SizedBox(height: 10.h),
-              GreenButton(
-                text: isLogin ? "Login" : 'Sign Up',
-                textColor: GreenColors.kMainColor,
-                height: 40.h,
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                onPressed: () async {
-                  if (allValidation()) {
-                    if (isLogin) {
-                      logIn(context, authProvider, plantProvider);
-                    } else {
-                      signIn(context, authProvider);
-                    }
-                  } else {
-                    VxToast.show(context, msg: "Something went wrong");
-                  }
-                },
+                ),
               ),
-              SizedBox(height: 10.h),
-              const ORBar(),
-              SizedBox(height: 10.h),
-              const OauthButton(),
+              SizedBox(width: 50.w),
             ],
           ),
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: toggleMethod,
-              child: !isLogin
-                  ? RichText(
-                      text: TextSpan(
-                          text: "Already have an account? ",
-                          style: TextStyle(
-                              fontSize: 18.sp, color: GreenColors.kMainColor),
-                          children: const [
-                            TextSpan(
-                                text: "Login",
-                                style: TextStyle(color: GreenColors.kLinkColor))
-                          ]),
-                    )
-                  : RichText(
-                      text: TextSpan(
-                          text: "Don’t have an account? ",
-                          style: TextStyle(
-                              fontSize: 18.sp, color: GreenColors.kMainColor),
-                          children: const [
-                            TextSpan(
-                                text: "Sign Up Free!",
-                                style: TextStyle(color: GreenColors.kLinkColor))
-                          ]),
-                    ),
-            ),
-          ),
-          SizedBox(width: 50.w),
-        ],
-      ),
-    ));
+        ));
   }
 }

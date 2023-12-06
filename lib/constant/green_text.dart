@@ -9,6 +9,7 @@ class GreenText {
   static String kUserData = "userData";
   static String kPlantInfo = "plantInfo";
   static String kDeviceToken = "deviceToken";
+  static String kShowcase = "showcase";
 
   //
 
@@ -22,6 +23,8 @@ class GreenText {
   static String kTooManyRequests = 'too-many-requests';
 
 //
+
+  //
 
   static String kQueryContent =
       "Have a question or something on your mind? We're here to help! Feel free to ask us anything, share your feedback, or submit a query using the form below. Our team is ready to assist you.\nRemember, no question is too small or too big. We value your input, and your queries help us serve you better.\nYour feedback is important to us, and we're committed to providing you with the information and assistance you need. Don't hesitate to reach out!";

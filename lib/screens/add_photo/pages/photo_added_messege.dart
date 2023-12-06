@@ -2,16 +2,13 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:green_puducherry/common_widgets/common_widgets.dart';
-import 'package:green_puducherry/common_widgets/green_buttons.dart';
 import 'package:green_puducherry/constant/constant.dart';
 import 'package:green_puducherry/helpers/my_navigation.dart';
 import 'package:green_puducherry/helpers/pop_scope_function.dart';
 import 'package:green_puducherry/providers/bottom_nav_provider.dart';
-import 'package:green_puducherry/providers/plant_provider.dart';
-import 'package:green_puducherry/screens/gallery/pages/gallery.dart';
 import 'package:provider/provider.dart';
 
-import '../../../common_widgets/background_scaffold.dart';
+import '../../gallery/pages/all_plant_gallery.dart';
 
 class AddPhotoMessage extends StatefulWidget {
   const AddPhotoMessage({super.key});
@@ -34,7 +31,7 @@ class _AddPhotoMessageState extends State<AddPhotoMessage> {
   @override
   Widget build(BuildContext context) {
     final bnp = Provider.of<BottomNavProvider>(context);
-    final plantProvider = Provider.of<PlantProvider>(context);
+
     return BackgroundScaffold(
       body: WillPopScope(
         onWillPop: () async => await willPopBack(context),
@@ -51,7 +48,8 @@ class _AddPhotoMessageState extends State<AddPhotoMessage> {
                   ),
                   SizedBox(height: 10.h),
                   Text(
-                    "Congratulations on your tree planting efforts! Your actions are helping create a greener and healthier world for future generations. We appreciate your dedication to nature and your valuable contribution to a more sustainable future. Keep up the fantastic work",
+                    // "Congratulations on your tree planting efforts! Your actions are helping create a greener and healthier world for future generations. We appreciate your dedication to nature and your valuable contribution to a more sustainable future. Keep up the fantastic work",
+                    "Congratulations on your tree planting efforts! Your next opportunity to upload a photo for the plant will be available on after 3 months",
                     style: TextStyle(
                         fontSize: 17.sp, color: GreenColors.kMainColor),
                     textAlign: TextAlign.center,
@@ -61,7 +59,7 @@ class _AddPhotoMessageState extends State<AddPhotoMessage> {
                     text: "View Gallery",
                     onPressed: () {
                       bnp.setIndex(1);
-                      MyNavigation.offAll(context, Gallery());
+                      MyNavigation.offAll(context, const AllPlantsGallery());
                       _controllerCenterRight.play();
                     },
                   ),

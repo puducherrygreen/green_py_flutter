@@ -34,7 +34,7 @@ class MyDropDown extends StatelessWidget {
           DropdownButtonFormField2(
             hint: Text(
               hintText,
-              style: TextStyle(color: Colors.grey),
+              style: const TextStyle(color: Colors.grey),
             ),
             value: value,
             isExpanded: true,
@@ -72,7 +72,7 @@ class MyDropDown extends StatelessWidget {
               left: 20,
               child: Container(
                 color: Colors.white,
-                padding: EdgeInsets.all(3),
+                padding: const EdgeInsets.all(3),
                 child: Text(
                   errorText,
                   style: TextStyle(color: Colors.red[600]),

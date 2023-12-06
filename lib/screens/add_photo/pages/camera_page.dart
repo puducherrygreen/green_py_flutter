@@ -1,15 +1,8 @@
-import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:green_puducherry/constant/constant.dart';
 import 'package:green_puducherry/helpers/my_navigation.dart';
-import 'package:green_puducherry/providers/plant_provider.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart';
+
 import '../../../main.dart';
 import 'photo_info_page.dart';
 
@@ -136,7 +129,8 @@ class _CameraPageState extends State<CameraPage> {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Center(
-            child: snaped ? CircularProgressIndicator() : SizedBox(),
+            child:
+                snaped ? const CircularProgressIndicator() : const SizedBox(),
           ),
         ),
       ],

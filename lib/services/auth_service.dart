@@ -76,7 +76,7 @@ class AuthService {
         return userModel;
       } else {
         if (context.mounted) {
-          MyNavigation.to(context, ProfileInformation());
+          MyNavigation.to(context, const ProfileInformation());
         }
       }
       LocalStorage.setBool(GreenText.kIsPending, true);
@@ -98,7 +98,11 @@ class AuthService {
       await _auth.currentUser?.sendEmailVerification();
       return GreenText.kSuccessMsg;
     } on FirebaseAuthException catch (e) {
+      print('verification sending error--------');
       print(e.code);
+      print(e.message);
+      print('verification sending error--------');
+
       return e.code;
     }
   }
