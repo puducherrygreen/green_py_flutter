@@ -10,6 +10,7 @@ import 'package:green_puducherry/helpers/validation_helper.dart';
 import 'package:green_puducherry/providers/auth_provider.dart';
 import 'package:green_puducherry/providers/plant_provider.dart';
 import 'package:green_puducherry/screens/add_photo/pages/camera_page.dart';
+import 'package:green_puducherry/screens/add_photo/pages/status_alert.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -117,6 +118,15 @@ class _SelectPlantState extends State<SelectPlant> {
     return isValid && drop;
   }
 
+  myDialogShowStatusDialog(BuildContext context,
+      {required PlantProvider plantProvider}) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return StatusAlert();
+        });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -190,16 +200,19 @@ class _SelectPlantState extends State<SelectPlant> {
                           return ImageForView(imageModel: e);
                         }).toList()),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Text(
-                          "Next chance to take a ${plantProvider.currentPlantModel?.plantName} will be on ${plantProvider.currentPlantModel?.updateDateNextPhoto}",
-                          style: TextStyle(
-                            fontSize: 16.sp,
+                      if (plantProvider
+                              .currentPlantModel?.updateDateNextPhoto !=
+                          null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Text(
+                            "Next chance to take a ${plantProvider.currentPlantModel?.plantName} will be on ${plantProvider.currentPlantModel?.updateDateNextPhoto}",
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
-                      ),
                     ],
                   ),
             const Spacer(),
@@ -215,7 +228,7 @@ class _SelectPlantState extends State<SelectPlant> {
                 if (locationStatus.isGranted && cameraStatus.isGranted) {
                   if (plantProvider.currentPlantModel != null) {
                     if (context.mounted) {
-                      await plantProvider.myDialogShowStatusDialog(context,
+                      await myDialogShowStatusDialog(context,
                           plantProvider: plantProvider);
                     }
                     return;

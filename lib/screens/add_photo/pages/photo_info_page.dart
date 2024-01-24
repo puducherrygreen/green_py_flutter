@@ -92,7 +92,7 @@ class _PhotoInfoPageState extends State<PhotoInfoPage> {
                       value: "${plantProvider.plantLand?.landName}"),
                 ImageInfoTail(
                     fieldName: "Status",
-                    value: plantProvider.isAlive ? "Alive" : "Dead"),
+                    value: plantProvider.isAlive ?? true ? "Alive" : "Dead"),
                 SizedBox(height: 10.h),
                 GreenButton(
                   text: 'Retake',
@@ -118,7 +118,8 @@ class _PhotoInfoPageState extends State<PhotoInfoPage> {
                           authProvider.userModel?.regionId,
                       "latitude": "${plantProvider.location?.latitude}",
                       "longitude": "${plantProvider.location?.longitude}",
-                      "status": plantProvider.isAlive ? "Alive" : "Dead",
+                      "status":
+                          plantProvider.isAlive ?? true ? "Alive" : "Dead",
                       "plantLandId": "${plantProvider.plantLand?.id}",
                       if (plantProvider.currentPlantModel != null)
                         "plantDetailsID": plantProvider.currentPlantModel?.id,

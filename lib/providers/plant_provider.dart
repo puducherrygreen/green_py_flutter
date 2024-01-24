@@ -30,7 +30,7 @@ class PlantProvider extends ChangeNotifier {
   List<PlantModel> plantModels = [];
   List<PlantLandModel> allPlantLands = [];
   PlantModel? currentPlantModel;
-  bool isAlive = true;
+  bool? isAlive;
   Position? location;
   List<PlantImageModel> allSelectedPlant = [];
   PlantLandModel? plantLand;
@@ -59,9 +59,10 @@ class PlantProvider extends ChangeNotifier {
     plantLand = null;
   }
 
-  setPlantStatus(bool status) {
+  bool setPlantStatus(bool status) {
     isAlive = status;
     notifyListeners();
+    return status;
   }
 
   setCurrentPlant(PlantModel plantModel) async {
@@ -196,44 +197,53 @@ class PlantProvider extends ChangeNotifier {
     }
   }
 
-  myDialogShowStatusDialog(BuildContext context,
-      {required PlantProvider plantProvider}) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("We need to Know Your Plant Status"),
-            titleTextStyle: TextStyle(fontSize: 15.sp, color: Colors.grey[700]),
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                MaterialButton(
-                  color: GreenColors.kMainColor,
-                  onPressed: () {
-                    plantProvider.setPlantStatus(true);
-                    MyNavigation.to(context, const CameraPage());
-                  },
-                  child: const Text(
-                    "Alive",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                MaterialButton(
-                  color: Colors.red[600],
-                  onPressed: () {
-                    plantProvider.setPlantStatus(false);
-                    MyNavigation.to(context, const CameraPage());
-                  },
-                  child: const Text(
-                    "Dead",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )
-              ],
-            ),
-          );
-        });
-  }
+  // myDialogShowStatusDialog(BuildContext context,
+  //     {required PlantProvider plantProvider}) {
+  //   showDialog(
+  //       context: context,
+  //       builder: (context) {
+  //         return AlertDialog(
+  //           title: const Text("We need to Know Your Plant Status"),
+  //           titleTextStyle: TextStyle(fontSize: 15.sp, color: Colors.grey[700]),
+  //           content: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             children: [
+  //               MaterialButton(
+  //                 color: isAlive != null
+  //                     ? isAlive ?? true
+  //                         ? GreenColors.kMainColor
+  //                         : GreenColors.kSecondColor
+  //                     : GreenColors.kSecondColor,
+  //                 onPressed: () {
+  //                   plantProvider.setPlantStatus(true);
+  //                   // MyNavigation.to(context, const CameraPage());
+  //                 },
+  //                 child: const Text(
+  //                   "Alive",
+  //                   style: TextStyle(color: Colors.white),
+  //                 ),
+  //               ),
+  //               MaterialButton(
+  //                 color: isAlive != null
+  //                     ? isAlive ?? true
+  //                         ? GreenColors.kSecondColor
+  //                         : Colors.red[600]
+  //                     : GreenColors.kSecondColor,
+  //                 onPressed: () {
+  //                   plantProvider.setPlantStatus(false);
+  //                   // MyNavigation.to(context, const CameraPage());
+  //
+  //                 },
+  //                 child: const Text(
+  //                   "Dead",
+  //                   style: TextStyle(color: Colors.white),
+  //                 ),
+  //               )
+  //             ],
+  //           ),
+  //         );
+  //       });
+  // }
 
   Future<void> showPermissionRequestDialog(BuildContext context) async {
     return showDialog(
